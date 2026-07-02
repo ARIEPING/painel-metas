@@ -3,103 +3,144 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Painel de Metas</title>
+<title>Painel de Metas da Operação</title>
 
 <style>
+:root {
+  --azul-claro: #d9ecfb;
+  --azul-titulo: #4f8fc4;
+  --verde: #00b050;
+  --cinza-fundo: #f5f7fa;
+  --cinza-barra: #e5e7eb;
+  --texto: #222;
+}
+
+* {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
   font-family: "Segoe UI", Arial, sans-serif;
-  background: #f4f7fb;
-  color: #222;
+  background: var(--cinza-fundo);
+  color: var(--texto);
 }
 
 .container {
-  max-width: 980px;
-  margin: 40px auto;
-  padding: 20px;
+  max-width: 1180px;
+  margin: 48px auto;
+  padding: 24px;
 }
 
 .header {
-  background: white;
-  border-radius: 10px;
-  box-shadow: 0 4px 18px rgba(80,150,210,.25);
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(80,150,210,.22);
   overflow: hidden;
-  margin-bottom: 24px;
+  margin-bottom: 34px;
 }
 
-.header-title {
-  background: #d9ecfb;
-  color: #4f8fc4;
-  font-size: 24px;
-  font-weight: 600;
-  padding: 10px 16px;
+.header-top {
+  background: var(--azul-claro);
+  padding: 18px 24px;
+  text-align: center;
 }
 
-.header-body {
+.header-top h1 {
+  margin: 0;
+  color: var(--azul-titulo);
+  font-size: 34px;
+  font-weight: 650;
+}
+
+.header-bottom {
   padding: 18px;
   text-align: center;
-  font-size: 18px;
+  font-size: 20px;
 }
 
 .cards {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 24px;
+  gap: 34px;
 }
 
 .card {
-  background: white;
-  border-radius: 10px;
-  box-shadow: 0 4px 18px rgba(80,150,210,.28);
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(80,150,210,.25);
   overflow: hidden;
 }
 
 .card-title {
-  background: #d9ecfb;
-  color: #4f8fc4;
-  font-size: 22px;
-  font-weight: 600;
-  padding: 8px 14px;
+  background: var(--azul-claro);
+  color: var(--azul-titulo);
+  padding: 16px 22px;
+  font-size: 30px;
+  font-weight: 650;
 }
 
 .card-body {
-  padding: 34px 24px;
+  padding: 54px 42px 44px;
   text-align: center;
 }
 
 .percentual {
-  font-size: 52px;
-  font-weight: 700;
-  margin-bottom: 28px;
+  font-size: 76px;
+  font-weight: 750;
+  margin-bottom: 42px;
 }
 
 .barra {
-  height: 18px;
-  background: #e5e7eb;
+  width: 100%;
+  height: 24px;
+  background: var(--cinza-barra);
   border-radius: 999px;
   overflow: hidden;
 }
 
 .progresso {
   height: 100%;
+  width: 0%;
+  background: var(--verde);
   border-radius: 999px;
-  background: #2c9bd3;
+  transition: width 1.2s ease;
 }
 
-.status {
-  margin-top: 16px;
-  font-size: 18px;
-  color: #00b050;
-  font-weight: 600;
+.restante {
+  margin-top: 26px;
+  font-size: 24px;
+  color: var(--verde);
+  font-weight: 650;
 }
 
-@media (max-width: 700px) {
+.footer {
+  margin-top: 34px;
+  text-align: center;
+  color: #6b7280;
+  font-size: 15px;
+}
+
+@media (max-width: 800px) {
+  .container {
+    margin: 18px auto;
+    padding: 16px;
+  }
+
   .cards {
     grid-template-columns: 1fr;
   }
 
+  .header-top h1 {
+    font-size: 26px;
+  }
+
+  .card-title {
+    font-size: 24px;
+  }
+
   .percentual {
-    font-size: 44px;
+    font-size: 58px;
   }
 }
 </style>
@@ -110,35 +151,42 @@ body {
 <div class="container">
 
   <div class="header">
-    <div class="header-title">Painel de Metas da Operação</div>
-    <div class="header-body" id="data"></div>
+    <div class="header-top">
+      <h1>Painel de Metas da Operação</h1>
+    </div>
+    <div class="header-bottom" id="data"></div>
   </div>
 
   <div class="cards">
 
     <div class="card">
-      <div class="card-title">Meta Mensal</div>
+      <div class="card-title">🎯 Meta Mensal</div>
       <div class="card-body">
-        <div class="percentual" id="mensal"></div>
+        <div class="percentual" id="mensal">0%</div>
         <div class="barra">
           <div class="progresso" id="barraMensal"></div>
         </div>
-        <div class="status">Meta realizada</div>
+        <div class="restante" id="restanteMensal"></div>
       </div>
     </div>
 
     <div class="card">
-      <div class="card-title">Meta Trimestral</div>
+      <div class="card-title">📈 Meta Trimestral</div>
       <div class="card-body">
-        <div class="percentual" id="trimestral"></div>
+        <div class="percentual" id="trimestral">0%</div>
         <div class="barra">
           <div class="progresso" id="barraTrimestral"></div>
         </div>
-        <div class="status">Meta realizada</div>
+        <div class="restante" id="restanteTrimestral"></div>
       </div>
     </div>
 
   </div>
+
+  <div class="footer">
+    Painel da Operação • Atualização automática
+  </div>
+
 </div>
 
 <script>
@@ -150,30 +198,42 @@ function formatarPercentual(valor) {
 }
 
 function limitar(valor) {
-  return Math.min(Number(valor), 100);
+  return Math.min(Math.max(Number(valor), 0), 100);
+}
+
+function restante(valor) {
+  return Math.max(100 - Number(valor), 0);
 }
 
 fetch("dados.json")
   .then(res => res.json())
   .then(dados => {
-    const mensal = dados.metaMensal;
-    const trimestral = dados.metaTrimestral;
+    const mensal = Number(dados.metaMensal);
+    const trimestral = Number(dados.metaTrimestral);
 
     document.getElementById("mensal").innerHTML = formatarPercentual(mensal);
     document.getElementById("trimestral").innerHTML = formatarPercentual(trimestral);
 
-    document.getElementById("barraMensal").style.width = limitar(mensal) + "%";
-    document.getElementById("barraTrimestral").style.width = limitar(trimestral) + "%";
+    document.getElementById("restanteMensal").innerHTML =
+      "Restam " + formatarPercentual(restante(mensal));
+
+    document.getElementById("restanteTrimestral").innerHTML =
+      "Restam " + formatarPercentual(restante(trimestral));
 
     const agora = new Date();
     document.getElementById("data").innerHTML =
-      "Atualizado em: " + agora.toLocaleString("pt-BR", {
+      "Última atualização: " + agora.toLocaleString("pt-BR", {
         day: "2-digit",
         month: "2-digit",
         year: "numeric",
         hour: "2-digit",
         minute: "2-digit"
-      });
+      }).replace(",", " •");
+
+    setTimeout(() => {
+      document.getElementById("barraMensal").style.width = limitar(mensal) + "%";
+      document.getElementById("barraTrimestral").style.width = limitar(trimestral) + "%";
+    }, 200);
   });
 </script>
 
