@@ -6,133 +6,175 @@
 <title>Painel de Metas</title>
 
 <style>
-body{
-    margin:0;
-    font-family:Arial,Helvetica,sans-serif;
-    background:#f4f6f9;
+body {
+  margin: 0;
+  font-family: "Segoe UI", Arial, sans-serif;
+  background: #f4f7fb;
+  color: #222;
 }
 
-.container{
-    max-width:700px;
-    margin:40px auto;
-    background:#fff;
-    padding:30px;
-    border-radius:15px;
-    box-shadow:0 10px 25px rgba(0,0,0,.1);
+.container {
+  max-width: 980px;
+  margin: 40px auto;
+  padding: 20px;
 }
 
-h1{
-    text-align:center;
-    margin-bottom:5px;
+.header {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 18px rgba(80,150,210,.25);
+  overflow: hidden;
+  margin-bottom: 24px;
 }
 
-.data{
-    text-align:center;
-    color:#777;
-    margin-bottom:30px;
+.header-title {
+  background: #d9ecfb;
+  color: #4f8fc4;
+  font-size: 24px;
+  font-weight: 600;
+  padding: 10px 16px;
 }
 
-.card{
-    background:#f8f8f8;
-    padding:20px;
-    border-radius:12px;
-    margin-bottom:25px;
+.header-body {
+  padding: 18px;
+  text-align: center;
+  font-size: 18px;
 }
 
-.percentual{
-    font-size:48px;
-    color:#0d6efd;
-    font-weight:bold;
+.cards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
 }
 
-.barra{
-    width:100%;
-    height:22px;
-    background:#ddd;
-    border-radius:30px;
-    overflow:hidden;
-    margin:15px 0;
+.card {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 18px rgba(80,150,210,.28);
+  overflow: hidden;
 }
 
-.progresso{
-    height:100%;
-    background:#22c55e;
+.card-title {
+  background: #d9ecfb;
+  color: #4f8fc4;
+  font-size: 22px;
+  font-weight: 600;
+  padding: 8px 14px;
+}
+
+.card-body {
+  padding: 34px 24px;
+  text-align: center;
+}
+
+.percentual {
+  font-size: 52px;
+  font-weight: 700;
+  margin-bottom: 28px;
+}
+
+.barra {
+  height: 18px;
+  background: #e5e7eb;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.progresso {
+  height: 100%;
+  border-radius: 999px;
+  background: #2c9bd3;
+}
+
+.status {
+  margin-top: 16px;
+  font-size: 18px;
+  color: #00b050;
+  font-weight: 600;
+}
+
+@media (max-width: 700px) {
+  .cards {
+    grid-template-columns: 1fr;
+  }
+
+  .percentual {
+    font-size: 44px;
+  }
 }
 </style>
-
 </head>
+
 <body>
 
 <div class="container">
 
-<h1>📊 Painel de Metas</h1>
+  <div class="header">
+    <div class="header-title">Painel de Metas da Operação</div>
+    <div class="header-body" id="data"></div>
+  </div>
 
-<div class="data" id="data"></div>
+  <div class="cards">
 
-<div class="card">
-<h2>🎯 Meta Mensal</h2>
+    <div class="card">
+      <div class="card-title">Meta Mensal</div>
+      <div class="card-body">
+        <div class="percentual" id="mensal"></div>
+        <div class="barra">
+          <div class="progresso" id="barraMensal"></div>
+        </div>
+        <div class="status">Meta realizada</div>
+      </div>
+    </div>
 
-<div class="percentual" id="mensal"></div>
+    <div class="card">
+      <div class="card-title">Meta Trimestral</div>
+      <div class="card-body">
+        <div class="percentual" id="trimestral"></div>
+        <div class="barra">
+          <div class="progresso" id="barraTrimestral"></div>
+        </div>
+        <div class="status">Meta realizada</div>
+      </div>
+    </div>
 
-<div class="barra">
-<div class="progresso" id="barraMensal"></div>
-</div>
-
-<p id="textoMensal"></p>
-
-</div>
-
-<div class="card">
-
-<h2>📈 Meta Trimestral</h2>
-
-<div class="percentual" id="trimestral"></div>
-
-<div class="barra">
-<div class="progresso" id="barraTrimestral"></div>
-</div>
-
-<p id="textoTrimestral"></p>
-
-</div>
-
+  </div>
 </div>
 
 <script>
+function formatarPercentual(valor) {
+  return Number(valor).toLocaleString("pt-BR", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }) + "%";
+}
+
+function limitar(valor) {
+  return Math.min(Number(valor), 100);
+}
 
 fetch("dados.json")
-.then(res=>res.json())
-.then(dados=>{
+  .then(res => res.json())
+  .then(dados => {
+    const mensal = dados.metaMensal;
+    const trimestral = dados.metaTrimestral;
 
-document.getElementById("mensal").innerHTML=dados.metaMensal+"%";
+    document.getElementById("mensal").innerHTML = formatarPercentual(mensal);
+    document.getElementById("trimestral").innerHTML = formatarPercentual(trimestral);
 
-document.getElementById("trimestral").innerHTML=dados.metaTrimestral+"%";
+    document.getElementById("barraMensal").style.width = limitar(mensal) + "%";
+    document.getElementById("barraTrimestral").style.width = limitar(trimestral) + "%";
 
-document.getElementById("barraMensal").style.width=dados.metaMensal+"%";
-
-document.getElementById("barraTrimestral").style.width=dados.metaTrimestral+"%";
-
-document.getElementById("textoMensal").innerHTML=
-`Até o momento estamos com <b>${dados.metaMensal}%</b> da meta mensal concluída.`;
-
-document.getElementById("textoTrimestral").innerHTML=
-`No trimestre estamos com <b>${dados.metaTrimestral}%</b> da meta concluída.`;
-
-const agora = new Date();
-
-const dataFormatada = agora.toLocaleString("pt-BR", {
-  day: "2-digit",
-  month: "2-digit",
-  year: "numeric",
-  hour: "2-digit",
-  minute: "2-digit"
-});
-
-document.getElementById("data").innerHTML =
-`Atualizado em: ${dataFormatada}`;
-
-});
-
+    const agora = new Date();
+    document.getElementById("data").innerHTML =
+      "Atualizado em: " + agora.toLocaleString("pt-BR", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit"
+      });
+  });
 </script>
 
 </body>
